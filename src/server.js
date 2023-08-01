@@ -19,6 +19,13 @@ wsServer.on("connection", (socket) => {
         socket.join(roomName);
         socket.to(roomName).emit("welcome");
     });
+    socket.on("disconnecting", () => {
+        socket.rooms.forEach(room => socket.to(room).emit("bye"));
+    });
+    socket.on("new_message", (msg, room, done) => {
+        socket.to(room).emit("new_message",msg);
+        done();
+    })
 });
 
 const handleListen = () => console.log("Listening on http://127.0.0.1:3000");
