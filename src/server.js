@@ -14,11 +14,14 @@ const handleListen = () => console.log("Listening on http://127.0.0.1:3000");
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+const sockets = [];
+
 wss.on("connection", (socket) => {
+    sockets.push(socket);
     console.log("Connect to Browser");
     socket.on("close", () => console.log("Disconnect to Browser"));
     socket.on("message", (msg) => {
-        socket.send(`${msg}`)
+        sockets.forEach(aSocket => aSocket.send(`${msg}`));
     })
 });
 
